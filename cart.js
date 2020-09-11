@@ -155,7 +155,7 @@ let goods = [
 		}
 
 
-				}) 
+				})
 
 
 
@@ -200,8 +200,7 @@ let goods = [
 			if (item2.identity === identity) {
 				let currentSum2 = $(this).parent().find('.cart-item_count').text();
 				$(this).parent().find('.cart-item_count').text(--currentSum2);
-				$('.sum').text(--currentSum);
-
+				$('.sum').eq(i).text(--currentSum);
 				if (currentSum2 === 0) {
 					$(this).attr('disabled', '');
 					console.log('Товар весь вернулся на складе')
@@ -209,5 +208,4 @@ let goods = [
 				break;
 			}
 		}
-		$('.goods-item_count-number').eq(i).text()
 	})
