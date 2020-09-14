@@ -27,19 +27,22 @@ let goods = [
 		name: 'Яблоки',
 		picture: 'https://e1.edimdoma.ru/data/ingredients/0000/2374/2374-ed4_wide.jpg?1487746348',
 		count: 0,
-		identity: 'apple'
+		identity: 'apple',
+		cost_cart: 0
 	},
 	{
 		name: 'Груши',
 		picture: 'https://prostoest.ru/wp-content/uploads/2013/08/125429195-727x522.jpg',
 		count: 0,
-		identity: 'pears'
+		identity: 'pears',
+		cost_cart: 0
 	},
 	{
 		name: 'Персики',
 		picture: 'https://i0.wp.com/cms-assets.tutsplus.com/uploads/users/1500/posts/30884/image/two_peach.jpg?w=474&ssl=1',
 		count: 0,
-		identity: 'peaches'
+		identity: 'peaches',
+		cost_cart: 0
 	},
 	]
 
@@ -49,22 +52,22 @@ let goods = [
 		result = '';
 
 		for (var index = 0; index < goods.length; index++) {
-			const item = goods[index];
+			const item_gods = goods[index];
 			result += `
 			<div class="goods-item">
 			<div class="goods-item-about">
-			<div class="goods-item_name">${item.name}</div>
-			<div class="goods-item_picture"><img src="${item.picture}"></div>
+			<div class="goods-item_name">${item_gods.name}</div>
+			<div class="goods-item_picture"><img src="${item_gods.picture}"></div>
 			<div class="goods-item_cost">
 			<span class="goods-item_cost-title">Цена</span>
-			<span class="goods-item_cost-price">${item.cost}</span>
+			<span class="goods-item_cost-price">${item_gods.cost}</span>
 			</div>
 			<div class="goods-item_count">
 			<span class="goods-item_count-title">на складе</span>
-			<span class="goods-item_count-number">${item.count}</span>
+			<span class="goods-item_count-number">${item_gods.count}</span>
 			</div>
 			</div>
-			<div class="goods-item-buy" data-identity="${item.identity}">
+			<div class="goods-item-buy" data-identity="${item_gods.identity}">
 			<button class="plus">+</button>
 			<button class="sum">0</button>
 			<button class="minus" disabled="disabled">-</button>
@@ -86,17 +89,17 @@ let goods = [
 		sum = ``;
 
 		for (var i = 0; i < cart.length; i++) {
-			const item2 = cart[i];
+			const item_cart = cart[i];
 			result2 += `
 			<div class="cart-items">
 			<div class="cart-item">
 
-			<div class="cart-item_name">${item2.name}</div>
-			<div class="cart-item_picture"><img src="${item2.picture}"></div>
-			<div class="cart-item-buy" data-identity = "${item2.identity}">
-			<button class="plus_carts">+</button>
-			<button class="cart-item_count">${item2.count}</button>
-			<button class="minus_carts" disabled="disabled">-</button>
+			<div class="cart-item_name">${item_cart.name}</div>
+			<div class="cart-item_picture"><img src="${item_cart.picture}"></div>
+			<div class="cart-item-buy" data-identity = "${item_cart.identity}">
+			<button class="cost_cart">${item_cart.cost_cart}</button>
+			<button class="cart-item_count">${item_cart.count}</button>
+			<button class="minus_cart" disabled="disabled">-</button>
 			</div>
 			</div><!-- cart-item -->
 			</div><!-- cart-items -->
@@ -104,7 +107,7 @@ let goods = [
 			sum = `
 			<div class="cart-sum">
 			<div class="cart-sum_title">Общая стоимость: </div>
-			<div class="cart-sum_totalSum">${item2.sum}</div>
+			<div class="cart-sum_totalSum">0</div>
 			</div>
 			`
 		}
@@ -123,45 +126,35 @@ let goods = [
 
 		for (var index = 0; index < goods.length; index++) {
 
-			const item = goods[index];
-			if (item.identity === identity) {
+			var item_goods = goods[index];
+			if (item_goods.identity === identity) {
 				var currentSum = $(this).parent().find('.sum').text();
 				var minusIsDisabled = $(this).parent().find('.minus').attr('disabled');
 				if (minusIsDisabled) {
 					$(this).parent().find('.minus').removeAttr('disabled')
 				}
-				$(this).parent().prev().find('.goods-item_count-number').text(--item.count);
+				$(this).parent().prev().find('.goods-item_count-number').text(--item_goods.count);
 				$(this).parent().find('.sum').text(++currentSum);
-				if (item.count === 0) {
+				if (item_goods.count === 0) {
 					$(this).attr('disabled', '');
 					console.log('Товар закончился на складе')
 				}
 				break;
 			}
-
 		}
 
 		for (var i = 0; i < cart.length; i++) {
-			const item2 = cart[i];
-			if (item2.identity === identity) {
-				item2.count = currentSum;
-				// $('.cart-item_count').text(item2.count);	//	здесь забрасывается всем - мы же все cart-item_count выбрали с помощью $('.cart-item_count')
-				// $('.cart-item_count').eq(i).text(item2.count);	// вариант 1, предполагает полное соответствие порядка элементов массива товаров с массивом корзины
-				$(`.cart-item-buy[data-identity=${identity}]`).parent().find('.cart-item_count').text(item2.count);	//	вариант 2, элементы могут быть в любом порядке и в разном количестве
-				$('.minus_carts').eq(i).removeAttr('disabled');
+			var item_cart = cart[i];
+			if (item_cart.identity === identity) {
+				item_cart.count = currentSum;
+				// $('.cart-item_count').eq(i).text(item_cart.count);	// вариант 1, предполагает полное соответствие порядка элементов массива товаров с массивом корзины
+				$(`.cart-item-buy[data-identity=${identity}]`).parent().find('.cart-item_count').text(item_cart.count);	//	вариант 2, элементы могут быть в любом порядке и в разном количестве
+				$('.minus_cart').eq(i).removeAttr('disabled');
+				item_cart.cost_cart = item_cart.count*item_goods.cost;
+				$('.cost_cart').eq(i).text(item_cart.cost_cart);
 			}
-
-
 		}
-
-
-				})
-
-
-
-
-
-
+	})
 
 
 
@@ -169,14 +162,14 @@ let goods = [
 		let identity = $(this).parent().attr('data-identity');
 
 		for (var index = 0; index < goods.length; index++) {
-			const item = goods[index];
-			if (item.identity === identity) {
+			const item_goods = goods[index];
+			if (item_goods.identity === identity) {
 				let currentSum = $(this).parent().find('.sum').text();
 				let plusIsDisabled = $(this).parent().find('.plus').attr('disabled');
 				if (plusIsDisabled) {
 					$(this).parent().find('.plus').removeAttr('disabled')
 				}
-				$(this).parent().prev().find('.goods-item_count-number').text(++item.count);
+				$(this).parent().prev().find('.goods-item_count-number').text(++item_goods.count);
 				$(this).parent().find('.sum').text(--currentSum);
 				if (currentSum === 0) {
 					$(this).attr('disabled', '');
@@ -191,19 +184,33 @@ let goods = [
 	}) 
 
 
-	$('.minus_carts').click(function() {
+	$('.minus_cart').click(function() {
 		let identity = $(this).parent().attr('data-identity');
 
 		for (var i = 0; i < cart.length; i++) {
-			const item2 = cart[i];
+			var item_cart = cart[i];
 			var currentSum = $('.sum').eq(i).text();
-			if (item2.identity === identity) {
+			if (item_cart.identity === identity) {
 				let currentSum2 = $(this).parent().find('.cart-item_count').text();
 				$(this).parent().find('.cart-item_count').text(--currentSum2);
 				$('.sum').eq(i).text(--currentSum);
 				if (currentSum2 === 0) {
 					$(this).attr('disabled', '');
 					console.log('Товар весь вернулся на складе')
+				}
+				break;
+			}
+		}
+		for (var index = 0; index < goods.length; index++) {
+			var item_goods = goods[index];
+			if (item_goods.identity === identity) {
+				$(`.goods-item-buy[data-identity=${identity}]`).parent().find('.goods-item_count-number').text(++item_goods.count);
+				$('.cost_cart').eq(i).text((--item_cart.count)*item_goods.cost);
+				if (currentSum === 0) {
+					$('.minus').attr('disabled', '');
+				}
+				else {
+					$('.minus').removeAttr('disabled')
 				}
 				break;
 			}
