@@ -154,9 +154,16 @@ let goods = [
 				$('.cost_cart').eq(i).text(item_cart.cost_cart);
 			}
 		}
+
+		var sum = 0
+		for (var i = 0; i < cart.length; i++) {
+			var item_cart = cart[i]
+			sum += item_cart.cost_cart;
+		}
+
+		$('.cart-sum_totalSum').text(sum)
+
 	})
-
-
 
 	$('.minus').click(function() {
 		let identity = $(this).parent().attr('data-identity');
@@ -201,11 +208,12 @@ let goods = [
 				break;
 			}
 		}
+
 		for (var index = 0; index < goods.length; index++) {
 			var item_goods = goods[index];
 			if (item_goods.identity === identity) {
 				$(`.goods-item-buy[data-identity=${identity}]`).parent().find('.goods-item_count-number').text(++item_goods.count);
-				$('.cost_cart').eq(i).text((--item_cart.count)*item_goods.cost);
+				$('.cost_cart').eq(index).text((--item_cart.count)*item_goods.cost);
 				if (currentSum === 0) {
 					$('.minus').attr('disabled', '');
 				}
@@ -215,4 +223,6 @@ let goods = [
 				break;
 			}
 		}
+		item_cart.cost_cart -= item_goods.cost;
+		$('.cart-sum_totalSum').text(item_cart.cost_cart)
 	})
